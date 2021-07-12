@@ -5,11 +5,12 @@ const serverSchema = mongoose.Schema({
 	serverID: String,
 	botJoinedAt: String,
 	memberCount: Number,
+	dontLog: { type: [], default: [] },
 	bans: { type: [{}], default: [{}] },
 	kicks: { type: [{}], default: [{}] },
 	members: { type: [{}], default: [{}] },
 	//ex member: {userID, joinedAt,
-	//messageLog: [{id,date,[messages]}], messageCount}
+	//messageLog: [{id,date,[messages]}], messageStatus}
 });
 
 module.exports = mongoose.model('Server', serverSchema);

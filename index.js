@@ -25,6 +25,9 @@ mongoose.connect('mongodb://localhost/big-brother', {
 const User = require('./models/user');
 const Server = require('./models/server');
 
+//i started separating some event code randomly.
+const MessageTools = require('./utils/message');
+
 //bot started up
 bot.on('ready', () => {
 	console.log(bot.user.username + ' is online and ready.');
@@ -45,6 +48,7 @@ bot.on('message', (message) => {
 	let args = message.content.split(' ');
 	let command = args[0];
 	let cmd = CH.getCommand(command);
+	MessageTools.logMessage(message.member, message.guild, message);
 	if (!cmd) return;
 
 	try {
@@ -103,6 +107,13 @@ bot.on('guildCreate', async (guild) => {
 		//TODO: update members[] on serverdoc
 		let memberManager = [];
 		guild.members.cache.forEach(async (member) => {
+			let newEntry = {
+				userID: member.id,
+				joinedAt: member.joinedAt,
+				messageCount: 0,
+				messageLog: [],
+			};
+			memberManager.push(newEntry);
 			const userDoc = await User.findOne({ userID: member.id }).catch((err) =>
 				console.log(err)
 			);
@@ -123,6 +134,7 @@ bot.on('guildCreate', async (guild) => {
 		serverDoc.serverName = guild.name;
 		serverDoc.botJoinedAt = date;
 		serverDoc.memberCount = guild.memberCount;
+		serverDoc.members = memberManager;
 		serverDoc.save().catch((err) => console.log(err));
 	}
 });
