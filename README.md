@@ -1,7 +1,7 @@
 # Intro
 
 > 'Big-Brother' is a open source Discord bot meant to log data in the background and be used as a safety net for Discord server staff teams. It logs kicks and bans globally in all servers the bot is in. The more the bot grows the more safe each server will be, is the theory at least. In the future, messages will be able to be flagged as problematic and that data would be shared globally as well.
-> k
+> Not fully completed. I'm currently working on literally everything! Message, kick, and ban logging not quite functional
 
 ## Technologies/Frameworks/APIs
 

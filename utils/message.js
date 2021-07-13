@@ -24,10 +24,7 @@ module.exports.logMessage = async (member, guild, message) => {
 		userDoc.messageCount = userDoc.messageCount + 1;
 		userDoc.save().catch((err) => console.log(err));
 	}
-	//TODO: Log message if allowed based on not excluded channels
-	console.log('finished logging message counts possibly');
 	let memberManager = [];
-	console.log(memberManager);
 	const newMessageLog = {
 		id: message.id,
 		serverID: guild.id,
@@ -35,6 +32,7 @@ module.exports.logMessage = async (member, guild, message) => {
 		messages: [message.content],
 		messageStatus: 'ACTIVE',
 	};
+
 	guild.members.cache.forEach((member) => {
 		if (member.id === message.author.id) {
 			const newEntry = {
@@ -45,7 +43,7 @@ module.exports.logMessage = async (member, guild, message) => {
 			memberManager.push(newEntry);
 		}
 	});
-	console.log(memberManager);
+
 	if (!serverDoc) {
 		const newServer = new Server({
 			serverName: guild.name,
@@ -57,12 +55,12 @@ module.exports.logMessage = async (member, guild, message) => {
 		newServer.save().catch((err) => console.log(err));
 	} else {
 		serverDoc.members.forEach((member) => {
-			if (member.id === message.author.id) {
-				member.messages.concat(newMessageLog);
+			if (member.userID === message.author.id) {
+				member.messages = member.messages.concat(newMessageLog);
+				serverDoc.markModified('members');
+				serverDoc.save().catch((err) => console.log(err));
 			}
 		});
-		serverDoc.markModified('members');
-		serverDoc.save().catch((err) => console.log(err));
 	}
 };
 

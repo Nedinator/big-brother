@@ -10,7 +10,7 @@ const serverSchema = mongoose.Schema({
 	kicks: { type: [{}], default: [{}] },
 	members: { type: [{}], default: [{}] },
 	//ex member: {userID, joinedAt,
-	//messageLog: [{id,date,[messages]}], messageStatus}
+	//messageLog: [{id,date,[messages]}]}
 });
 
 module.exports = mongoose.model('Server', serverSchema);
