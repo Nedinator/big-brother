@@ -58,6 +58,20 @@ bot.on('message', (message) => {
 	}
 });
 
+bot.on('messageUpdate', (oldMessage, newMessage) => {
+	//
+	MessageTools.editMessage(
+		oldMessage.member,
+		oldMessage.guild,
+		oldMessage,
+		newMessage
+	);
+});
+
+bot.on('messageDelete', (message) => {
+	MessageTools.deleteMessage(message, message.member, message.guild);
+});
+
 //bot join
 bot.on('guildCreate', async (guild) => {
 	const date = moment();
@@ -163,7 +177,5 @@ bot.on('guildMemberAdd', async (member) => {
 //member ban
 
 //member unban
-
-//message edited
 
 bot.login(process.env.TOKEN);

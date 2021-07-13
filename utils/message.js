@@ -64,6 +64,34 @@ module.exports.logMessage = async (member, guild, message) => {
 	}
 };
 
-module.exports.editMessage = (member, guild, oldMessage, newMessage) => {
+module.exports.editMessage = async (member, guild, oldMessage, newMessage) => {
+	//
+	const serverDoc = await Server.findOne({ serverID: guild.id }).catch((err) =>
+		console.log(err)
+	);
+
+	if (!serverDoc) {
+		//this shouldn't happen but we're gonna make sure its taken care of
+		const newServer = new Server({
+			serverName: guild.name,
+			serverID: guild.id,
+			botJoinedAt: date,
+			memberCount: guild.memberCount,
+		});
+		newServer.save().catch((err) => console.log(err));
+	} else {
+		serverDoc.members.forEach((user) => {
+			if (user.userID === member.id) {
+				user.messages.forEach((messageLog) => {
+					messageLog.messages = messageLog.messages.concat(newMessage.content);
+				});
+			}
+		});
+		serverDoc.markModified('members');
+		serverDoc.save().catch((err) => console.log(err));
+	}
+};
+
+module.exports.deleteMessage = (message, member, guild) => {
 	//
 };
