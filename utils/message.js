@@ -11,6 +11,8 @@ module.exports.logMessage = async (member, guild, message) => {
 	);
 	const date = moment();
 
+	//TODO: check dontLog array for message.channel.id
+
 	if (!userDoc) {
 		const newUser = new User({
 			userID: member.id,
@@ -83,7 +85,12 @@ module.exports.editMessage = async (member, guild, oldMessage, newMessage) => {
 		serverDoc.members.forEach((user) => {
 			if (user.userID === member.id) {
 				user.messages.forEach((messageLog) => {
-					messageLog.messages = messageLog.messages.concat(newMessage.content);
+					if (messageLog.id === oldMessage.id) {
+						messageLog.messages = messageLog.messages.concat(
+							newMessage.content
+						);
+						messageLog.messageStatus = 'EDITED';
+					}
 				});
 			}
 		});
@@ -92,6 +99,30 @@ module.exports.editMessage = async (member, guild, oldMessage, newMessage) => {
 	}
 };
 
-module.exports.deleteMessage = (message, member, guild) => {
-	//
+module.exports.deleteMessage = async (message, member, guild) => {
+	const serverDoc = await Server.findOne({ serverID: guild.id }).catch((err) =>
+		console.log(err)
+	);
+	if (!serverDoc) {
+		const newServer = new Server({
+			serverName: guild.name,
+			serverID: guild.id,
+			botJoinedAt: date,
+			memberCount: guild.memberCount,
+		});
+		newServer.save().catch((err) => console.log(err));
+	} else {
+		//
+		serverDoc.members.forEach((member) => {
+			if (member.id === member.id) {
+				member.messages.forEach((messageLog) => {
+					if (messageLog.id === message.id) {
+						messageLog.messageStatus = 'DELETED';
+					}
+				});
+			}
+		});
+		serverDoc.markModified('members');
+		serverDoc.save().catch((err) => console.log(err));
+	}
 };

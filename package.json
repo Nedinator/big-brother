@@ -13,6 +13,7 @@
     "djs-commands": "^1.2.2",
     "dotenv": "^10.0.0",
     "moment": "^2.29.1",
-    "mongoose": "^5.13.2"
+    "mongoose": "^5.13.2",
+    "nodemon": "^2.0.12"
   }
 }

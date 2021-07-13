@@ -59,7 +59,6 @@ bot.on('message', (message) => {
 });
 
 bot.on('messageUpdate', (oldMessage, newMessage) => {
-	//
 	MessageTools.editMessage(
 		oldMessage.member,
 		oldMessage.guild,
